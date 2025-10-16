@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h3>{{ job.title }} at {{ job.company }}</h3>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+    <p><strong>Salary:</strong> {{ job.salary }}</p>
+    <p>{{ job.description }}</p>
+
+    {% if current_user.is_authenticated and current_user.role == 'jobseeker' %}
+      <form method="POST" action="{{ url_for('apply_job', job_id=job.id) }}">
+        <button type="submit" class="btn btn-success mt-2">Apply Now</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

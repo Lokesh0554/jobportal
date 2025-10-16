@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <form class="row gx-2" method="get">
+        <div class="col"><input name="q" class="form-control" placeholder="Search jobs or company"></div>
+        <div class="col"><input name="location" class="form-control" placeholder="Location"></div>
+        <div class="col"><input name="category" class="form-control" placeholder="Category"></div>
+        <div class="col-auto"><button class="btn btn-primary">Search</button></div>
+      </form>
+    </div>
+  </div>
+
+  {% for j in jobs %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5><a href="{{ url_for('job_detail', job_id=j.id) }}">{{ j.title }}</a></h5>
+        <p class="mb-1">{{ j.company }} • {{ j.location }} • {{ j.category }}</p>
+        <small class="text-muted">Posted {{ j.posted_at.strftime('%Y-%m-%d') }}</small>
+      </div>
+    </div>
+  {% else %}
+    <p>No jobs found.</p>
+  {% endfor %}
+{% endblock %}

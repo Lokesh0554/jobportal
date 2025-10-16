@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3 text-center">Dashboard</h3>
+
+{% if current_user.role == 'employer' %}
+  <h5>Your Job Listings</h5>
+  {% for j in jobs %}
+    <div class="card mb-2">
+      <div class="card-body">
+        <h5>{{ j.title }}</h5>
+        <p>{{ j.company }} • {{ j.location }}</p>
+        <a href="{{ url_for('job_detail', job_id=j.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+      </div>
+    </div>
+  {% else %}
+    <p>No jobs posted yet.</p>
+  {% endfor %}
+{% else %}
+  <h5>Your Applications</h5>
+  {% for a in apps %}
+    <div class="card mb-2">
+      <div class="card-body">
+        <h5>{{ a.job.title }}</h5>
+        <p>{{ a.job.company }} • {{ a.job.location }}</p>
+        <small>Applied on {{ a.applied_at.strftime('%Y-%m-%d') }}</small>
+      </div>
+    </div>
+  {% else %}
+    <p>No applications yet.</p>
+  {% endfor %}
+{% endif %}
+{% endblock %}
