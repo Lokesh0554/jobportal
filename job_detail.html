@@ -1,17 +1,54 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="card">
-  <div class="card-body">
-    <h3>{{ job.title }} at {{ job.company }}</h3>
-    <p><strong>Location:</strong> {{ job.location }}</p>
-    <p><strong>Salary:</strong> {{ job.salary }}</p>
-    <p>{{ job.description }}</p>
+{% extends "base.html" %}
 
-    {% if current_user.is_authenticated and current_user.role == 'jobseeker' %}
-      <form method="POST" action="{{ url_for('apply_job', job_id=job.id) }}">
-        <button type="submit" class="btn btn-success mt-2">Apply Now</button>
-      </form>
-    {% endif %}
-  </div>
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2>{{ job.title }}</h2>
+
+<hr>
+
+<p><strong>Company :</strong> {{ job.company }}</p>
+
+<p><strong>Category :</strong> {{ job.category }}</p>
+
+<p><strong>Location :</strong> {{ job.location }}</p>
+
+<p><strong>Salary :</strong> {{ job.salary }}</p>
+
+<p><strong>Description</strong></p>
+
+<p>
+
+{{ job.description }}
+
+</p>
+
+{% if current_user.is_authenticated %}
+
+{% if current_user.role=="jobseeker" %}
+
+<form
+method="POST"
+action="{{ url_for('apply',job_id=job.id) }}">
+
+<button
+class="btn btn-success">
+
+Apply Now
+
+</button>
+
+</form>
+
+{% endif %}
+
+{% endif %}
+
 </div>
+
+</div>
+
 {% endblock %}
