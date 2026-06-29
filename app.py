@@ -34,9 +34,11 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    salary = db.Column(db.String(50))
-    location = db.Column(db.String(100))
     company = db.Column(db.String(100))
+    location = db.Column(db.String(100))
+    salary = db.Column(db.String(50))
+    category = db.Column(db.String(100))
+    posted_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     posted_by = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Application(db.Model):
@@ -115,31 +117,59 @@ def dashboard():
 
 @app.route('/post_job', methods=['GET', 'POST'])
 @login_required
+@app.route('/post_job', methods=['GET', 'POST'])
+@login_required
 def post_job():
+
     if current_user.role != 'employer':
-        flash('Only employers can post jobs.', 'danger')
+        flash('Only employers can post jobs.')
         return redirect(url_for('dashboard'))
 
     if request.method == 'POST':
+
         job = Job(
             title=request.form['title'],
             company=request.form['company'],
             description=request.form['description'],
             salary=request.form['salary'],
             location=request.form['location'],
+            category=request.form['category'],
             posted_by=current_user.id
         )
+
         db.session.add(job)
         db.session.commit()
-        flash('Job posted successfully!', 'success')
-        return redirect(url_for('dashboard'))
 
-    return render_template('post_job.html')
+        flash("Job Posted Successfully")
+
+        return redirect(url_for('jobs'))
+
+    return render_template("post_job.html")
 
 @app.route('/jobs')
 def jobs():
-    all_jobs = Job.query.all()
-    return render_template('jobs.html', jobs=all_jobs)
+
+    q=request.args.get("q","")
+    location=request.args.get("location","")
+    category=request.args.get("category","")
+
+    jobs=Job.query
+
+    if q:
+        jobs=jobs.filter(
+            (Job.title.contains(q)) |
+            (Job.company.contains(q))
+        )
+
+    if location:
+        jobs=jobs.filter(Job.location.contains(location))
+
+    if category:
+        jobs=jobs.filter(Job.category.contains(category))
+
+    jobs=jobs.all()
+
+    return render_template("jobs.html",jobs=jobs)
 
 @app.route('/job/<int:job_id>')
 def job_detail(job_id):
