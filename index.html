@@ -1,25 +1,158 @@
-{% extends 'base.html' %}
-{% block content %}
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <form class="row gx-2" method="get">
-        <div class="col"><input name="q" class="form-control" placeholder="Search jobs or company"></div>
-        <div class="col"><input name="location" class="form-control" placeholder="Location"></div>
-        <div class="col"><input name="category" class="form-control" placeholder="Category"></div>
-        <div class="col-auto"><button class="btn btn-primary">Search</button></div>
-      </form>
-    </div>
-  </div>
+{% extends "base.html" %}
 
-  {% for j in jobs %}
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5><a href="{{ url_for('job_detail', job_id=j.id) }}">{{ j.title }}</a></h5>
-        <p class="mb-1">{{ j.company }} • {{ j.location }} • {{ j.category }}</p>
-        <small class="text-muted">Posted {{ j.posted_at.strftime('%Y-%m-%d') }}</small>
-      </div>
+{% block content %}
+
+<div class="row mb-4">
+
+    <div class="col-md-12">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h2 class="mb-4 text-center">
+                    Find Your Dream Job
+                </h2>
+
+                <form method="GET">
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <input
+                                type="text"
+                                name="q"
+                                class="form-control"
+                                placeholder="Job Title or Company">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                type="text"
+                                name="location"
+                                class="form-control"
+                                placeholder="Location">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                type="text"
+                                name="category"
+                                class="form-control"
+                                placeholder="Category">
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button
+                                class="btn btn-primary w-100">
+
+                                Search
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
     </div>
-  {% else %}
-    <p>No jobs found.</p>
-  {% endfor %}
+
+</div>
+
+{% if jobs %}
+
+<div class="row">
+
+{% for job in jobs %}
+
+<div class="col-md-6 mb-4">
+
+<div class="card shadow h-100">
+
+<div class="card-body">
+
+<h4>
+
+{{ job.title }}
+
+</h4>
+
+<p>
+
+<strong>Company :</strong>
+
+{{ job.company }}
+
+</p>
+
+<p>
+
+<strong>Category :</strong>
+
+{{ job.category }}
+
+</p>
+
+<p>
+
+<strong>Location :</strong>
+
+{{ job.location }}
+
+</p>
+
+<p>
+
+<strong>Salary :</strong>
+
+{{ job.salary }}
+
+</p>
+
+<p>
+
+{{ job.description[:120] }}...
+
+</p>
+
+<a
+href="{{ url_for('job_detail',job_id=job.id) }}"
+class="btn btn-success">
+
+View Details
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-warning">
+
+No Jobs Found
+
+</div>
+
+{% endif %}
+
 {% endblock %}
